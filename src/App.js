@@ -13,10 +13,6 @@ const App = () => {
         "https://jsonplaceholder.typicode.com/users"
       );
       const { data = [] } = response || {};
-      console.log(
-        ">>>Kartik>> ~ file: App.js ~ line 11 ~ getData ~ response",
-        data
-      );
       if (Array.isArray(data)) {
         setFetchedData(data);
         copyFetchData = data;
