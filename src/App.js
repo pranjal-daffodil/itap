@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+
 import "./App.css";
-let copyFetchData = [];
+
+let initialData = [];
+
 const App = () => {
-  const reference = React.useRef();
-  const [fetchedData, setFetchedData] = React.useState([]);
+  const reference = useRef();
+  const [filteredData, setFilteredData] = useState([]);
   const [onPressItem, setOnPressItem] = useState(-1);
-  const [error, setError] = React.useState("");
+  const [error, setError] = useState("");
+
   const getData = async () => {
     try {
       const response = await axios.get(
@@ -14,20 +18,21 @@ const App = () => {
       );
       const { data = [] } = response || {};
       if (Array.isArray(data)) {
-        setFetchedData(data);
-        copyFetchData = data;
-        // setExtraData(data);
+        setFilteredData(data);
+        initialData = data;
       }
     } catch (err) {
       setError("Error in fetching data");
     }
   };
-  React.useEffect(() => {
+
+  useEffect(() => {
     getData();
   }, []);
+
   const filterData = () => {
-    setFetchedData(
-      copyFetchData.filter((item) => {
+    setFilteredData(
+      initialData.filter((item) => {
         let value = reference.current && reference.current.value;
         return (
           item.name
@@ -50,8 +55,8 @@ const App = () => {
           placeholder="Search by name or email"
         />
         <div className="search-list">
-          {Array.isArray(fetchedData) && fetchedData.length ? (
-            fetchedData.map((item, index) => {
+          {Array.isArray(filteredData) && filteredData.length ? (
+            filteredData.map((item, index) => {
               const {
                 name = "",
                 username = "",
